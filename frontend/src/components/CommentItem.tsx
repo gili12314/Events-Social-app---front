@@ -18,11 +18,9 @@ interface CommentItemProps {
 }
 
 const CommentItem: React.FC<CommentItemProps> = ({ comment, onEdit, onDelete, currentUserId }) => {
-  // המרת המזהים למחרוזת – אם כבר אינם מחרוזת
   const commentUserId = comment.user._id ? comment.user._id.toString() : "";
   const currentId = currentUserId ? currentUserId.toString() : "";
 
-  // הדפסה לצורך בדיקה – יש להסיר את ההדפסות לאחר ווידוא שהערכים נכונים
   console.log("Comment user id:", commentUserId);
   console.log("Current user id:", currentId);
 

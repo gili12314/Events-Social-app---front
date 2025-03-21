@@ -24,9 +24,13 @@ function EventDetailPage() {
   const [suggestions, setSuggestions] = useState<string>("");
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [currentUserId, setCurrentUserId] = useState<string>("");
 
-  // נניח ששומרים את מזהה המשתמש במחלקה נפרדת (או ניתן להניח שהטוקן מכיל את המזהה)
-  const currentUserId = localStorage.getItem("userId") || ""; 
+  useEffect(() => {
+    // טוען את userId מה־localStorage כאשר הדף נטען
+    const idFromStorage = localStorage.getItem("userId") || "";
+    setCurrentUserId(idFromStorage);
+  }, []);
 
   useEffect(() => {
     const fetchEvent = async () => {

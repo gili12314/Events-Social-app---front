@@ -1,4 +1,3 @@
-// src/pages/LoginPage.tsx
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
@@ -12,14 +11,27 @@ function LoginPage() {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:3000/api/auth/login", { email, password });
+      console.log("Login response:", response.data);
+
       // שמירת הטוקן
       localStorage.setItem("token", response.data.token);
-      // שמירת מזהה המשתמש
-      localStorage.setItem("userId", response.data.user._id);
+
+      // בדיקה: אם קיימת בתגובה גם מידע על המשתמש – שמור גם את userId
+      if (response.data.user && response.data.user._id) {
+        localStorage.setItem("userId", response.data.user._id);
+      } else {
+        console.warn("User information not found in login response");
+      }
+
       navigate("/events");
-    } catch (error) {
-      console.error("Login failed:", error);
-      alert("התחברות נכשלה. בדוק את הפרטים והנסה שוב.");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error("Login failed:", error.response?.data || error.message);
+        alert("התחברות נכשלה. בדוק את הפרטים והנסה שוב.");
+      } else {
+        console.error("Unexpected error:", error);
+        alert("התחברות נכשלה, שגיאה בלתי צפויה.");
+      }
     }
   };
 
