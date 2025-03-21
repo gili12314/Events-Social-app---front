@@ -16,9 +16,9 @@ function LoginPage() {
       // שמירת הטוקן
       localStorage.setItem("token", response.data.token);
 
-      // בדיקה: אם קיימת בתגובה גם מידע על המשתמש – שמור גם את userId
-      if (response.data.user && response.data.user._id) {
-        localStorage.setItem("userId", response.data.user._id);
+      // שמירת מזהה המשתמש – שימו לב: משתמשים ב-response.data._id, מכיוון שהשרת מחזיר _id ישירות
+      if (response.data._id) {
+        localStorage.setItem("userId", response.data._id);
       } else {
         console.warn("User information not found in login response");
       }

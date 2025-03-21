@@ -1,3 +1,4 @@
+// src/components/CommentList.tsx
 import React from "react";
 import CommentItem from "./CommentItem";
 
@@ -15,17 +16,16 @@ interface CommentListProps {
   comments: Comment[];
   onEdit: (commentId: string, newText: string) => void;
   onDelete: (commentId: string) => void;
-  currentUserId: string;
 }
 
-const CommentList: React.FC<CommentListProps> = ({ comments, onEdit, onDelete, currentUserId }) => {
+const CommentList: React.FC<CommentListProps> = ({ comments, onEdit, onDelete }) => {
   return (
     <div>
       {comments.length === 0 ? (
         <p>אין תגובות עדיין.</p>
       ) : (
         comments.map((comment) => (
-          <CommentItem key={comment._id} comment={comment} onEdit={onEdit} onDelete={onDelete} currentUserId={currentUserId} />
+          <CommentItem key={comment._id} comment={comment} onEdit={onEdit} onDelete={onDelete} />
         ))
       )}
     </div>

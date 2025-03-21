@@ -1,3 +1,4 @@
+// src/pages/EventDetailPage.tsx
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
@@ -24,13 +25,6 @@ function EventDetailPage() {
   const [suggestions, setSuggestions] = useState<string>("");
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
-  const [currentUserId, setCurrentUserId] = useState<string>("");
-
-  useEffect(() => {
-    // טוען את userId מה־localStorage כאשר הדף נטען
-    const idFromStorage = localStorage.getItem("userId") || "";
-    setCurrentUserId(idFromStorage);
-  }, []);
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -129,7 +123,6 @@ function EventDetailPage() {
         comments={comments} 
         onEdit={handleUpdateComment} 
         onDelete={handleDeleteComment} 
-        currentUserId={currentUserId} 
       />
     </div>
   );
