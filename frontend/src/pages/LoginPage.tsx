@@ -1,6 +1,8 @@
+// src/pages/LoginPage.tsx
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import GoogleLoginButton from "../components/GoogleLoginButton";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -16,7 +18,7 @@ function LoginPage() {
       // שמירת הטוקן
       localStorage.setItem("token", response.data.token);
 
-      // שמירת מזהה המשתמש – שימו לב: משתמשים ב-response.data._id, מכיוון שהשרת מחזיר _id ישירות
+      // שמירת מזהה המשתמש – משתמשים ב-response.data._id, מכיוון שהשרת מחזיר _id ישירות
       if (response.data._id) {
         localStorage.setItem("userId", response.data._id);
       } else {
@@ -55,10 +57,14 @@ function LoginPage() {
           required
           style={{ marginBottom: "12px" }}
         />
-        <button type="submit" className="btn" style={{ width: "100%" }}>
+        <button type="submit" className="btn" style={{ width: "100%", padding: "10px" }}>
           התחבר
         </button>
       </form>
+      <div style={{ textAlign: "center", margin: "20px 0" }}>או</div>
+      <div style={{ textAlign: "center" }}>
+        <GoogleLoginButton />
+      </div>
       <p style={{ marginTop: "16px", textAlign: "center" }}>
         אין לך חשבון? <Link to="/register" style={{ color: "#007bff", textDecoration: "underline" }}>הרשם כאן</Link>
       </p>
