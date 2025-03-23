@@ -14,11 +14,11 @@ function RegisterPage() {
     e.preventDefault();
     try {
       await register(username, email, password);
-      alert("הרשמה הצליחה!.");
+      alert("Registration successful!");
       navigate("/events");
     } catch (error) {
       console.error("Registration failed:", error);
-      alert("הרשמה נכשלה, נסה שוב.");
+      alert("Registration failed, please try again.");
     }
   };
 
@@ -28,7 +28,7 @@ function RegisterPage() {
       <form onSubmit={handleRegister}>
         <input
           type="text"
-          placeholder="שם משתמש"
+          placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
@@ -36,7 +36,7 @@ function RegisterPage() {
         />
         <input
           type="email"
-          placeholder="אימייל"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -44,18 +44,18 @@ function RegisterPage() {
         />
         <input
           type="password"
-          placeholder="סיסמה"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
           style={{ marginBottom: "12px" }}
         />
         <button type="submit" className="btn" style={{ width: "100%", backgroundColor: "#28a745" }}>
-          הרשמה
+        Register
         </button>
       </form>
       <p style={{ marginTop: "16px", textAlign: "center" }}>
-        כבר יש לך חשבון? <Link to="/login" style={{ color: "#007bff", textDecoration: "underline" }}>התחבר כאן</Link>
+        Already have an account? <Link to="/login" style={{ color: "#007bff", textDecoration: "underline" }}>Login here</Link>
       </p>
     </div>
   );

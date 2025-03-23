@@ -2,7 +2,7 @@ import { get, post } from ".";
 import { IUser } from "../types";
 
 
-export async function login(email: string, password: string): Promise<{token:string}> {
+export async function login(email: string, password: string): Promise<IUser> {
     return post("auth/login", { email, password });
 }
 

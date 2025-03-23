@@ -20,7 +20,7 @@ const GoogleLoginButton: React.FC = () => {
         cursor: "pointer",
       }}
     >
-      התחבר עם Google
+      Login with Google
     </button>
   );
 };

@@ -6,7 +6,7 @@ export interface IAuthContext {
     user: IUser | null;
     loading: boolean;
     token: string | null;
-    login: (email: string, password: string) => Promise<{token: string}>;
+    login: (email: string, password: string) => Promise<IUser>;
     register: (username: string, email: string, password: string) => Promise<{token: string}>;
     logout: () => void;
 }
@@ -42,10 +42,14 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
     const login = async (email: string, password: string) => {
         try {
             setLoading(true)
-            const response = await AuthService.login(email, password)
-            setToken(response.token)
-            localStorage.setItem("token", response.token)
-            return response
+            const user = await AuthService.login(email, password)
+            if(!user.token) {
+                throw new Error("No token in response")
+            }
+            setToken(user.token)
+            setUser(user)
+            localStorage.setItem("token", user.token)
+            return user
         }
         catch(e) {
             console.error("Failed to login:", e)

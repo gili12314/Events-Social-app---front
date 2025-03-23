@@ -44,7 +44,7 @@ function ProfilePage() {
 
   return (
     <div className="container" style={{ marginTop: "40px" }}>
-      <h1 style={{ fontSize: "2rem", fontWeight: "bold" }}>פרופיל משתמש</h1>
+      <h1 style={{ fontSize: "2rem", fontWeight: "bold" }}>User Profile</h1>
       <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
         {profile.profileImage ? (
           <img
@@ -65,7 +65,7 @@ function ProfilePage() {
               justifyContent: "center",
             }}
           >
-            אין תמונה
+            No Image
           </div>
         )}
         <div>
@@ -80,7 +80,7 @@ function ProfilePage() {
               display: "block",
             }}
           >
-            ערוך פרופיל
+            Edit Profile
           </Link>
         </div>
       </div>

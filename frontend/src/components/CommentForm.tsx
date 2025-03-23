@@ -18,13 +18,13 @@ const CommentForm: React.FC<CommentFormProps> = ({ onSubmit }) => {
   return (
     <form onSubmit={handleSubmit} style={{ marginTop: "16px" }}>
       <textarea
-        placeholder="הוסף תגובה..."
+        placeholder="Add a comment..."
         value={text}
         onChange={(e) => setText(e.target.value)}
         style={{ width: "100%", height: "80px", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
       />
       <button type="submit" className="btn" style={{ marginTop: "8px" }}>
-        הוסף תגובה
+        Add Comment
       </button>
     </form>
   );

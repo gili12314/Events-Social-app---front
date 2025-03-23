@@ -9,6 +9,7 @@ import EventDetailPage from "./pages/EventDetailPage";
 import Navbar from "./components/Navbar";
 import NotificationsPage from "./pages/NotificationsPage";
 import GoogleCallbackPage from "./pages/GoogleCallbackPage";
+import PrivateRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/events" element={<EventsPage />} />
+        <Route path="/events" element={<PrivateRoute><EventsPage /></PrivateRoute>} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/events/:id" element={<EventDetailPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />

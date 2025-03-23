@@ -14,7 +14,7 @@ function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await login(email, password);
+      await login(email, password);
       navigate("/events");
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

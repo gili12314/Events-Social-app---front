@@ -30,8 +30,8 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, onEdit, onDelete }) 
     // במקרה זה, אין לנו שם משתמש – ניתן להציג "Unknown" או להשאיר ריק
     username = "Unknown";
   } else {
-    commentUserId = comment.user._id.toString();
-    username = comment.user.username;
+    commentUserId = comment?.user?._id.toString();
+    username = comment?.user?.username;
   }
 
   // הדפסות לבדיקה – להסרה לאחר ווידוא
@@ -48,16 +48,16 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, onEdit, onDelete }) 
         <div>
           <button
             onClick={() => {
-              const newText = prompt("עדכן את התגובה:", comment.text);
+              const newText = prompt("Update comment:", comment.text);
               if (newText && newText.trim() !== "") {
                 onEdit(comment._id, newText);
               }
             }}
             style={{ marginRight: "8px" }}
           >
-            ערוך
+            Edit
           </button>
-          <button onClick={() => onDelete(comment._id)}>מחק</button>
+          <button onClick={() => onDelete(comment._id)}>Delete</button>
         </div>
       )}
     </div>

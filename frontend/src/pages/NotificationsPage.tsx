@@ -50,19 +50,19 @@ function NotificationsPage() {
     <div className="container" style={{ marginTop: "40px" }}>
       <h1 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "20px" }}>התראות</h1>
       {loading ? (
-        <p className="loading">טוען התראות...</p>
+        <p className="loading">Loading notification...</p>
       ) : notifications.length === 0 ? (
-        <p>אין התראות חדשות.</p>
+        <p>No new notifications</p>
       ) : (
         <div>
           <button onClick={markAsRead} className="btn" style={{ marginBottom: "20px" }}>
-            סימון כנקראות
+          Mark as Read
           </button>
           <ul style={{ listStyle: "none", padding: 0 }}>
             {notifications.map((notification) => (
               <li key={notification._id} style={{ padding: "12px", marginBottom: "8px", border: "1px solid #ccc", borderRadius: "4px", backgroundColor: notification.isRead ? "#e9ecef" : "#fff" }}>
                 <p>
-                  <strong>{notification.sender.username}</strong> {notification.type === "join" ? "הצטרף" : "עשה לייק"} לאירוע: <strong>{notification.event.title}</strong>
+                  <strong>{notification.sender.username}</strong> {notification.type === "join" ? "joined" : "liked"} לאירוע: <strong>{notification.event.title}</strong>
                 </p>
                 <p style={{ fontSize: "0.85rem", color: "#666" }}>
                   {new Date(notification.createdAt).toLocaleString()}

@@ -13,7 +13,7 @@ const ProfilePictureUpload: React.FC = () => {
 
   const handleUpload = async () => {
     if (!selectedFile) {
-      setUploadStatus("לא נבחר קובץ");
+      setUploadStatus("No file selected");
       return;
     }
 
@@ -26,21 +26,21 @@ const ProfilePictureUpload: React.FC = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      setUploadStatus("התמונה עודכנה בהצלחה!");
+      setUploadStatus("Profile picture updated successfully!");
       console.log("Response:", response.data);
       // אפשר לעדכן גם state גלובלי או לעדכן את הפרופיל במידת הצורך
     } catch (error) {
       console.error("Upload error:", error);
-      setUploadStatus("שגיאה בהעלאת התמונה");
+      setUploadStatus("Error uploading the image");
     }
   };
 
   return (
     <div style={{ margin: "20px 0" }}>
-      <h3>עדכון תמונת פרופיל</h3>
+      <h3> Update Profile Picture </h3>
       <input type="file" accept="image/*" onChange={handleFileChange} />
       <button onClick={handleUpload} style={{ marginLeft: "10px", padding: "8px 12px" }}>
-        העלאה
+        Upload
       </button>
       {uploadStatus && <p>{uploadStatus}</p>}
     </div>

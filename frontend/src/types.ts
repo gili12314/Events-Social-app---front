@@ -5,8 +5,8 @@ export interface IUser  {
     email: string;
     password?: string; 
     profileImage?: string;
+    token?: string;
 }
-
 
 export interface IEvent  {
     _id: string

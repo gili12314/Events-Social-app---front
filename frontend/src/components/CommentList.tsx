@@ -22,7 +22,7 @@ const CommentList: React.FC<CommentListProps> = ({ comments, onEdit, onDelete })
   return (
     <div>
       {comments.length === 0 ? (
-        <p>אין תגובות עדיין.</p>
+        <p>No comments</p>
       ) : (
         comments.map((comment) => (
           <CommentItem key={comment._id} comment={comment} onEdit={onEdit} onDelete={onDelete} />
