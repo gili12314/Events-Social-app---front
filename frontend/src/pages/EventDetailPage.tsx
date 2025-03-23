@@ -1,15 +1,17 @@
 // src/pages/EventDetailPage.tsx
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
 import CommentList from "../components/CommentList";
 import CommentForm from "../components/CommentForm";
+import LikeButton from "../components/LikeButton";
 
 interface Event {
   _id: string;
   title: string;
   description: string;
   image?: string;
+  likes: string[];
 }
 
 interface Comment {
@@ -100,29 +102,56 @@ function EventDetailPage() {
         <img
           src={`http://localhost:3000${event.image}`}
           alt={event.title}
-          style={{ width: "100%", height: "400px", objectFit: "cover", margin: "20px 0", borderRadius: "8px" }}
+          style={{
+            width: "100%",
+            height: "400px",
+            objectFit: "cover",
+            margin: "20px 0",
+            borderRadius: "8px",
+          }}
         />
       )}
       <p style={{ marginBottom: "20px" }}>{event.description}</p>
-      <button onClick={handleImprove} className="btn">
+      
+      {/* כפתור "עדכן אירוע" */}
+      <div style={{ marginBottom: "20px" }}>
+        <Link to={`/events/${event._id}/edit`}>
+          <button className="btn" style={{ padding: "10px 20px", fontSize: "1rem" }}>
+            עדכן אירוע
+          </button>
+        </Link>
+      </div>
+      
+      {/* שילוב LikeButton */}
+      <LikeButton eventId={event._id} initialLikes={event.likes} />
+      
+      <button onClick={handleImprove} className="btn" style={{ marginTop: "20px" }}>
         שפר את האירוע
       </button>
       {loadingSuggestions && <p style={{ marginTop: "20px" }}>טוען הצעות...</p>}
       {suggestions && (
-        <div style={{ marginTop: "20px", padding: "16px", border: "1px solid #ccc", borderRadius: "8px", backgroundColor: "#fff" }}>
-          <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "12px" }}>הצעות לשיפור האירוע:</h2>
+        <div
+          style={{
+            marginTop: "20px",
+            padding: "16px",
+            border: "1px solid #ccc",
+            borderRadius: "8px",
+            backgroundColor: "#fff",
+          }}
+        >
+          <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "12px" }}>
+            הצעות לשיפור האירוע:
+          </h2>
           <p>{suggestions}</p>
         </div>
       )}
-
       <hr style={{ margin: "40px 0" }} />
-
       <h2 style={{ fontSize: "1.75rem", fontWeight: "bold", marginBottom: "20px" }}>תגובות</h2>
       <CommentForm onSubmit={handleAddComment} />
-      <CommentList 
-        comments={comments} 
-        onEdit={handleUpdateComment} 
-        onDelete={handleDeleteComment} 
+      <CommentList
+        comments={comments}
+        onEdit={handleUpdateComment}
+        onDelete={handleDeleteComment}
       />
     </div>
   );

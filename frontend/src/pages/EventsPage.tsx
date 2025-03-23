@@ -1,3 +1,4 @@
+// src/pages/EventsPage.tsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -28,15 +29,51 @@ function EventsPage() {
   return (
     <div className="container" style={{ marginTop: "40px" }}>
       <h1 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "20px" }}>אירועים</h1>
-      <div style={{ display: "grid", gap: "20px", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>
+      {/* כפתור "צור אירוע חדש" */}
+      <div style={{ marginBottom: "20px" }}>
+        <Link to="/events/create">
+          <button className="btn" style={{ padding: "10px 20px", fontSize: "1rem" }}>
+            צור אירוע חדש
+          </button>
+        </Link>
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gap: "20px",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+        }}
+      >
         {events.map((event) => (
-          <div key={event._id} style={{ border: "1px solid #ccc", padding: "16px", borderRadius: "8px", backgroundColor: "#fff" }}>
-            <h2 style={{ fontSize: "1.25rem", marginBottom: "8px" }}>{event.title}</h2>
+          <div
+            key={event._id}
+            style={{
+              border: "1px solid #ccc",
+              padding: "16px",
+              borderRadius: "8px",
+              backgroundColor: "#fff",
+            }}
+          >
+            <h2 style={{ fontSize: "1.25rem", marginBottom: "8px" }}>
+              {event.title}
+            </h2>
             {event.image && (
-              <img src={`http://localhost:3000${event.image}`} alt={event.title} style={{ width: "100%", height: "200px", objectFit: "cover", marginBottom: "8px" }} />
+              <img
+                src={`http://localhost:3000${event.image}`}
+                alt={event.title}
+                style={{
+                  width: "100%",
+                  height: "200px",
+                  objectFit: "cover",
+                  marginBottom: "8px",
+                }}
+              />
             )}
             <p style={{ marginBottom: "8px" }}>{event.description}</p>
-            <Link to={`/events/${event._id}`} style={{ color: "#007bff", textDecoration: "underline" }}>
+            <Link
+              to={`/events/${event._id}`}
+              style={{ color: "#007bff", textDecoration: "underline" }}
+            >
               פרטים נוספים
             </Link>
           </div>
