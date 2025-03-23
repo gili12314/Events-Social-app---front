@@ -1,30 +1,33 @@
 // src/pages/LoginPage.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import GoogleLoginButton from "../components/GoogleLoginButton";
+import { AuthContext } from "../context/AuthContext";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { token, setAuthData } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedToken = token || localStorage.getItem("token");
+    if (storedToken) {
+      navigate("/events");
+    }
+  }, [token, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:3000/api/auth/login", { email, password });
       console.log("Login response:", response.data);
-
-      // שמירת הטוקן
-      localStorage.setItem("token", response.data.token);
-
-      // שמירת מזהה המשתמש – משתמשים ב-response.data._id, מכיוון שהשרת מחזיר _id ישירות
-      if (response.data._id) {
-        localStorage.setItem("userId", response.data._id);
+      if (response.data.token && response.data._id) {
+        setAuthData(response.data.token, response.data._id);
       } else {
         console.warn("User information not found in login response");
       }
-
       navigate("/events");
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -66,10 +69,13 @@ function LoginPage() {
         <GoogleLoginButton />
       </div>
       <p style={{ marginTop: "16px", textAlign: "center" }}>
-        אין לך חשבון? <Link to="/register" style={{ color: "#007bff", textDecoration: "underline" }}>הרשם כאן</Link>
+        אין לך חשבון?{" "}
+        <Link to="/register" style={{ color: "#007bff", textDecoration: "underline" }}>
+          הרשם כאן
+        </Link>
       </p>
     </div>
   );
 }
 
-export default LoginPage;
+export default LoginPage; 
