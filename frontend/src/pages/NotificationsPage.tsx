@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
+import { AuthGuarded } from "../AuthGuarded";
 
 interface Notification {
   _id: string;
@@ -75,4 +76,4 @@ function NotificationsPage() {
   );
 }
 
-export default NotificationsPage;
+export default AuthGuarded(NotificationsPage);

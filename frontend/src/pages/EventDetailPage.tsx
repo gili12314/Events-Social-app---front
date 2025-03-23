@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
 import CommentList from "../components/CommentList";
 import CommentForm from "../components/CommentForm";
+import { AuthGuarded } from "../AuthGuarded";
 
 interface Event {
   _id: string;
@@ -128,4 +129,4 @@ function EventDetailPage() {
   );
 }
 
-export default EventDetailPage;
+export default AuthGuarded(EventDetailPage);

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { AuthGuarded } from "../AuthGuarded";
 
 interface Event {
   _id: string;
@@ -46,4 +47,4 @@ function EventsPage() {
   );
 }
 
-export default EventsPage;
+export default AuthGuarded(EventsPage);

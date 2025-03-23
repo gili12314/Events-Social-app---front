@@ -1,7 +1,15 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function HomePage() {
+  const{token} = useAuth()
+  const nav =useNavigate()
+  useEffect(() => {
+    if(token){
+      nav('/events')
+    }
+  },[token])
   return (
     <div className="container" style={{ textAlign: "center", paddingTop: "60px" }}>
       <h1 style={{ fontSize: "3rem", fontWeight: "bold", marginBottom: "20px" }}>

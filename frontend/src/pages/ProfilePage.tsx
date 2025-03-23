@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import ProfilePictureUpload from "../components/ProfilePictureUpload";
+import { AuthGuarded } from "../AuthGuarded";
 
 interface UserProfile {
   _id: string;
@@ -88,4 +89,4 @@ function ProfilePage() {
   );
 }
 
-export default ProfilePage;
+export default AuthGuarded(ProfilePage);

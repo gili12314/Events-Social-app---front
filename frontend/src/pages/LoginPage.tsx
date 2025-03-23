@@ -3,28 +3,18 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import GoogleLoginButton from "../components/GoogleLoginButton";
+import { useAuth } from "../context/AuthContext";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const {login} = useAuth()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/login", { email, password });
-      console.log("Login response:", response.data);
-
-      // שמירת הטוקן
-      localStorage.setItem("token", response.data.token);
-
-      // שמירת מזהה המשתמש – משתמשים ב-response.data._id, מכיוון שהשרת מחזיר _id ישירות
-      if (response.data._id) {
-        localStorage.setItem("userId", response.data._id);
-      } else {
-        console.warn("User information not found in login response");
-      }
-
+      const response = await login(email, password);
       navigate("/events");
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

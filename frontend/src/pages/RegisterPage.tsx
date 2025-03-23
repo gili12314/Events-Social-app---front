@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -8,12 +8,14 @@ function RegisterPage() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const {register} = useAuth()
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/api/auth/register", { username, email, password });
-      alert("הרשמה הצליחה! כעת תוכל להתחבר.");
-      navigate("/login");
+      await register(username, email, password);
+      alert("הרשמה הצליחה!.");
+      navigate("/events");
     } catch (error) {
       console.error("Registration failed:", error);
       alert("הרשמה נכשלה, נסה שוב.");
