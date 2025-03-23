@@ -12,13 +12,15 @@ interface Event {
   description: string;
   image?: string;
   likes: string[];
+  createdBy: { _id: string; username: string };
+  participants: string[];
 }
 
 interface Comment {
   _id: string;
   text: string;
   createdAt: string;
-  user: { _id: string; username: string };
+  user: { _id: string; username: string }; 
 }
 
 function EventDetailPage() {
@@ -27,6 +29,7 @@ function EventDetailPage() {
   const [suggestions, setSuggestions] = useState<string>("");
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
+  const currentUserId = localStorage.getItem("userId") || "";
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -91,68 +94,70 @@ function EventDetailPage() {
     }
   };
 
-  if (!event) {
-    return <div>טוען...</div>;
-  }
+  const handleJoinLeave = async () => {
+    if (!event) return;
+    const isParticipant = event.participants.includes(currentUserId);
+    try {
+      const endpoint = isParticipant ? `/events/${event._id}/leave` : `/events/${event._id}/join`;
+      const response = await axiosInstance.post(endpoint);
+      setEvent(response.data.event);
+    } catch (error) {
+      console.error("Error toggling join/leave", error);
+    }
+  };
+
+  if (!event) return <div>טוען...</div>;
+
+  const creatorId = event.createdBy._id;
+  const creatorName = event.createdBy.username;
 
   return (
     <div className="container" style={{ marginTop: "40px" }}>
       <h1 style={{ fontSize: "2rem", fontWeight: "bold" }}>{event.title}</h1>
+      <p style={{ fontSize: "1rem", color: "#333" }}>נוצר על ידי: {creatorName}</p>
       {event.image && (
         <img
           src={`http://localhost:3000${event.image}`}
           alt={event.title}
-          style={{
-            width: "100%",
-            height: "400px",
-            objectFit: "cover",
-            margin: "20px 0",
-            borderRadius: "8px",
-          }}
+          style={{ width: "100%", height: "400px", objectFit: "cover", margin: "20px 0", borderRadius: "8px" }}
         />
       )}
       <p style={{ marginBottom: "20px" }}>{event.description}</p>
-      
-      {/* כפתור "עדכן אירוע" */}
-      <div style={{ marginBottom: "20px" }}>
-        <Link to={`/events/${event._id}/edit`}>
-          <button className="btn" style={{ padding: "10px 20px", fontSize: "1rem" }}>
-            עדכן אירוע
+      {currentUserId !== creatorId && (
+        <div style={{ marginBottom: "20px" }}>
+          <button onClick={handleJoinLeave} className="btn" style={{ padding: "10px 20px", fontSize: "1rem" }}>
+            {event.participants.includes(currentUserId) ? "בטל הצטרפות לאירוע" : "הצטרף לאירוע"}
           </button>
-        </Link>
-      </div>
-      
-      {/* שילוב LikeButton */}
+        </div>
+      )}
+      {currentUserId === creatorId && (
+        <>
+          <div style={{ marginBottom: "20px" }}>
+            <Link to={`/events/${event._id}/edit`}>
+              <button className="btn" style={{ padding: "10px 20px", fontSize: "1rem" }}>
+                עדכן אירוע
+              </button>
+            </Link>
+          </div>
+          <div style={{ marginBottom: "20px" }}>
+            <button onClick={handleImprove} className="btn" style={{ padding: "10px 20px", fontSize: "1rem" }}>
+              שפר את האירוע
+            </button>
+          </div>
+        </>
+      )}
       <LikeButton eventId={event._id} initialLikes={event.likes} />
-      
-      <button onClick={handleImprove} className="btn" style={{ marginTop: "20px" }}>
-        שפר את האירוע
-      </button>
       {loadingSuggestions && <p style={{ marginTop: "20px" }}>טוען הצעות...</p>}
       {suggestions && (
-        <div
-          style={{
-            marginTop: "20px",
-            padding: "16px",
-            border: "1px solid #ccc",
-            borderRadius: "8px",
-            backgroundColor: "#fff",
-          }}
-        >
-          <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "12px" }}>
-            הצעות לשיפור האירוע:
-          </h2>
+        <div style={{ marginTop: "20px", padding: "16px", border: "1px solid #ccc", borderRadius: "8px", backgroundColor: "#fff" }}>
+          <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "12px" }}>הצעות לשיפור האירוע:</h2>
           <p>{suggestions}</p>
         </div>
       )}
       <hr style={{ margin: "40px 0" }} />
       <h2 style={{ fontSize: "1.75rem", fontWeight: "bold", marginBottom: "20px" }}>תגובות</h2>
       <CommentForm onSubmit={handleAddComment} />
-      <CommentList
-        comments={comments}
-        onEdit={handleUpdateComment}
-        onDelete={handleDeleteComment}
-      />
+      <CommentList comments={comments} onEdit={handleUpdateComment} onDelete={handleDeleteComment} />
     </div>
   );
 }

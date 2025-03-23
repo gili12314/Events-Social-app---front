@@ -29,6 +29,7 @@ function EventsPage() {
   return (
     <div className="container" style={{ marginTop: "40px" }}>
       <h1 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "20px" }}>אירועים</h1>
+      
       {/* כפתור "צור אירוע חדש" */}
       <div style={{ marginBottom: "20px" }}>
         <Link to="/events/create">
@@ -37,6 +38,7 @@ function EventsPage() {
           </button>
         </Link>
       </div>
+
       <div
         style={{
           display: "grid",
@@ -54,9 +56,7 @@ function EventsPage() {
               backgroundColor: "#fff",
             }}
           >
-            <h2 style={{ fontSize: "1.25rem", marginBottom: "8px" }}>
-              {event.title}
-            </h2>
+            <h2 style={{ fontSize: "1.25rem", marginBottom: "8px" }}>{event.title}</h2>
             {event.image && (
               <img
                 src={`http://localhost:3000${event.image}`}
