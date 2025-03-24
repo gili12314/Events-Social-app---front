@@ -24,7 +24,9 @@ function NotificationsPage() {
   const fetchNotifications = async () => {
     try {
       const response = await axiosInstance.get("/notifications");
-      setNotifications(response.data.notifications || response.data);
+      if (response && response.data) {
+        setNotifications(response.data);  // עדכון הסטייט עם ההתראות שהתקבלו
+      }
     } catch (error) {
       console.error("Error fetching notifications", error);
     } finally {
@@ -35,14 +37,14 @@ function NotificationsPage() {
   const markAsRead = async () => {
     try {
       await axiosInstance.put("/notifications/read");
-      fetchNotifications();
+      fetchNotifications();  // רענון ההתראות לאחר סימון כנקראות
     } catch (error) {
       console.error("Error marking notifications as read", error);
     }
   };
 
   useEffect(() => {
-    fetchNotifications();
+    fetchNotifications();  // קריאה ל-API להורדת ההתראות עם טעינת הדף
   }, []);
 
   return (
@@ -59,9 +61,20 @@ function NotificationsPage() {
           </button>
           <ul style={{ listStyle: "none", padding: 0 }}>
             {notifications.map((notification) => (
-              <li key={notification._id} style={{ padding: "12px", marginBottom: "8px", border: "1px solid #ccc", borderRadius: "4px", backgroundColor: notification.isRead ? "#e9ecef" : "#fff" }}>
+              <li
+                key={notification._id}
+                style={{
+                  padding: "12px",
+                  marginBottom: "8px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  backgroundColor: notification.isRead ? "#e9ecef" : "#fff",
+                }}
+              >
                 <p>
-                  <strong>{notification.sender.username}</strong> {notification.type === "join" ? "הצטרף" : "עשה לייק"} לאירוע: <strong>{notification.event.title}</strong>
+                  <strong>{notification.sender.username}</strong>{" "}
+                  {notification.type === "join" ? "הצטרף" : "עשה לייק"} לאירוע:{" "}
+                  <strong>{notification.event ? notification.event.title : "אירוע לא זמין"}</strong>
                 </p>
                 <p style={{ fontSize: "0.85rem", color: "#666" }}>
                   {new Date(notification.createdAt).toLocaleString()}
