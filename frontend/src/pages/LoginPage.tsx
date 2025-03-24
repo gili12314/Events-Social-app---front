@@ -1,4 +1,3 @@
-// src/pages/LoginPage.tsx
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
@@ -25,6 +24,8 @@ function LoginPage() {
       console.log("Login response:", response.data);
       if (response.data.token && response.data._id) {
         setAuthData(response.data.token, response.data._id);
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("userId", response.data._id);
       } else {
         console.warn("User information not found in login response");
       }
@@ -78,4 +79,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage; 
+export default LoginPage;

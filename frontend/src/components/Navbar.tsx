@@ -1,21 +1,15 @@
 // src/components/Navbar.tsx
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 import "./Navbar.css";
 
 function Navbar() {
+  const { token, clearAuthData } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    setIsLoggedIn(false);
+    clearAuthData();
     navigate("/login");
   };
 
@@ -23,7 +17,7 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-left">
         <Link to="/" className="navbar-brand">אירועים</Link>
-        {isLoggedIn && (
+        {token && (
           <>
             <Link to="/profile" className="navbar-link">פרופיל</Link>
             <Link to="/notifications" className="navbar-link">התראות</Link>
@@ -31,7 +25,7 @@ function Navbar() {
         )}
       </div>
       <div className="navbar-right">
-        {isLoggedIn ? (
+        {token ? (
           <button onClick={handleLogout}>התנתק</button>
         ) : (
           <>
@@ -44,4 +38,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default Navbar; 

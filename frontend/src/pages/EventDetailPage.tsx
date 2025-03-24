@@ -8,9 +8,11 @@ interface Event {
   title: string;
   description: string;
   image?: string;
+  date: string;
+  location: string;
   likes: string[];
   createdBy: { _id: string; username: string };
-  participants: string[];
+  participants: { _id: string; username: string }[];
 }
 
 function EventDetailPage() {
@@ -59,7 +61,7 @@ function EventDetailPage() {
 
   const handleJoinLeave = async () => {
     if (!event) return;
-    const isParticipant = event.participants.includes(currentUserId);
+    const isParticipant = event.participants.some((p) => p._id === currentUserId);
     try {
       const endpoint = isParticipant ? `/events/${event._id}/leave` : `/events/${event._id}/join`;
       const response = await axiosInstance.post(endpoint);
@@ -78,6 +80,9 @@ function EventDetailPage() {
     <div className="container" style={{ marginTop: "40px" }}>
       <h1 style={{ fontSize: "2rem", fontWeight: "bold" }}>{event.title}</h1>
       <p style={{ fontSize: "1rem", color: "#333" }}>נוצר על ידי: {creatorName}</p>
+      <p style={{ fontSize: "1rem", color: "#333" }}>תאריך ושעה: {new Date(event.date).toLocaleString()}</p>
+      <p style={{ fontSize: "1rem", color: "#333" }}>מיקום: {event.location}</p>
+      <p style={{ fontSize: "1rem", color: "#333" }}>מספר משתתפים: {event.participants.length}</p>
       {event.image && (
         <img
           src={`http://localhost:3000${event.image}`}
@@ -89,7 +94,7 @@ function EventDetailPage() {
       {currentUserId !== creatorId && (
         <div style={{ marginBottom: "20px" }}>
           <button onClick={handleJoinLeave} className="btn" style={{ padding: "10px 20px", fontSize: "1rem" }}>
-            {event.participants.includes(currentUserId) ? "בטל הצטרפות לאירוע" : "הצטרף לאירוע"}
+            {event.participants.some((p) => p._id === currentUserId) ? "בטל הצטרפות לאירוע" : "הצטרף לאירוע"}
           </button>
         </div>
       )}
@@ -106,6 +111,14 @@ function EventDetailPage() {
             <button onClick={handleImprove} className="btn" style={{ padding: "10px 20px", fontSize: "1rem" }}>
               שפר את האירוע
             </button>
+          </div>
+          <div style={{ marginTop: "20px" }}>
+            <h2 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>משתתפים</h2>
+            <ul style={{ listStyle: "none", padding: 0 }}>
+              {event.participants.map((participant) => (
+                <li key={participant._id} style={{ marginBottom: "5px" }}>{participant.username}</li>
+              ))}
+            </ul>
           </div>
         </>
       )}
