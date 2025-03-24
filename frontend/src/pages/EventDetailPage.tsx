@@ -63,7 +63,7 @@ function EventDetailPage() {
     if (!event) return;
     const isParticipant = event.participants.some((p) => p._id === currentUserId);
     try {
-     const endpoint = isParticipant ? `/events/${event._id}/leave` : `/events/${event._id}/join`;
+      const endpoint = isParticipant ? `/events/${event._id}/leave` : `/events/${event._id}/join`;
       await axiosInstance.post(endpoint);
       setEvent((prevState) => {
         if (prevState) {
@@ -76,6 +76,18 @@ function EventDetailPage() {
       });
     } catch (error) {
       console.error("Error toggling join/leave", error);
+    }
+  };
+
+  const handleDeleteEvent = async () => {
+    if (!event) return;
+    try {
+      await axiosInstance.delete(`/events/${event._id}`);
+      alert("האירוע נמחק בהצלחה");
+      window.location.href = "/events"; // Redirect to events page after delete
+    } catch (error) {
+      console.error("Error deleting event", error);
+      alert("לא ניתן למחוק את האירוע");
     }
   };
 
@@ -118,6 +130,11 @@ function EventDetailPage() {
           <div style={{ marginBottom: "20px" }}>
             <button onClick={handleImprove} className="btn" style={{ padding: "10px 20px", fontSize: "1rem" }}>
               שפר את האירוע
+            </button>
+          </div>
+          <div style={{ marginBottom: "20px" }}>
+            <button onClick={handleDeleteEvent} className="btn btn-danger" style={{ padding: "10px 20px", fontSize: "1rem" }}>
+              מחק את האירוע
             </button>
           </div>
           <div style={{ marginTop: "20px" }}>
