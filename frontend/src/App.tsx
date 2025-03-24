@@ -1,4 +1,3 @@
-// src/App.tsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -9,6 +8,7 @@ import ProfileEditPage from "./pages/ProfileEditPage";
 import EventDetailPage from "./pages/EventDetailPage";
 import CreateEventPage from "./pages/CreateEventPage";
 import UpdateEventPage from "./pages/UpdateEventPage";
+import CommentsPage from "./pages/CommentsPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import GoogleCallbackPage from "./pages/GoogleCallbackPage";
 import Navbar from "./components/Navbar";
@@ -25,6 +25,7 @@ function App() {
         <Route path="/events/create" element={<CreateEventPage />} />
         <Route path="/events/:id" element={<EventDetailPage />} />
         <Route path="/events/:id/edit" element={<UpdateEventPage />} />
+        <Route path="/events/:id/comments" element={<CommentsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/profile/edit" element={<ProfileEditPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
