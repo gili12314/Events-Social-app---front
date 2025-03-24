@@ -63,9 +63,17 @@ function EventDetailPage() {
     if (!event) return;
     const isParticipant = event.participants.some((p) => p._id === currentUserId);
     try {
-      const endpoint = isParticipant ? `/events/${event._id}/leave` : `/events/${event._id}/join`;
-      const response = await axiosInstance.post(endpoint);
-      setEvent(response.data.event);
+     const endpoint = isParticipant ? `/events/${event._id}/leave` : `/events/${event._id}/join`;
+      await axiosInstance.post(endpoint);
+      setEvent((prevState) => {
+        if (prevState) {
+          const updatedParticipants = isParticipant
+            ? prevState.participants.filter((p) => p._id !== currentUserId)
+            : [...prevState.participants, { _id: currentUserId, username: "" }];
+          return { ...prevState, participants: updatedParticipants };
+        }
+        return prevState;
+      });
     } catch (error) {
       console.error("Error toggling join/leave", error);
     }
