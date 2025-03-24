@@ -1,9 +1,6 @@
-// src/pages/EventDetailPage.tsx
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
-import CommentList from "../components/CommentList";
-import CommentForm from "../components/CommentForm";
 import LikeButton from "../components/LikeButton";
 
 interface Event {
@@ -16,19 +13,12 @@ interface Event {
   participants: string[];
 }
 
-interface Comment {
-  _id: string;
-  text: string;
-  createdAt: string;
-  user: { _id: string; username: string }; 
-}
-
 function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [event, setEvent] = useState<Event | null>(null);
-  const [suggestions, setSuggestions] = useState<string>("");
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [suggestions, setSuggestions] = useState<string>("");
+  const [commentCount, setCommentCount] = useState<number>(0);
   const currentUserId = localStorage.getItem("userId") || "";
 
   useEffect(() => {
@@ -44,15 +34,15 @@ function EventDetailPage() {
   }, [id]);
 
   useEffect(() => {
-    const fetchComments = async () => {
+    const fetchCommentCount = async () => {
       try {
         const response = await axiosInstance.get(`/comments/${id}`);
-        setComments(response.data);
+        setCommentCount(response.data.length);
       } catch (error) {
-        console.error("Error fetching comments", error);
+        console.error("Error fetching comment count", error);
       }
     };
-    fetchComments();
+    fetchCommentCount();
   }, [id]);
 
   const handleImprove = async () => {
@@ -64,33 +54,6 @@ function EventDetailPage() {
       console.error("Error getting suggestions", error);
     } finally {
       setLoadingSuggestions(false);
-    }
-  };
-
-  const handleAddComment = async (text: string) => {
-    try {
-      const response = await axiosInstance.post(`/comments/${id}`, { text });
-      setComments([response.data, ...comments]);
-    } catch (error) {
-      console.error("Error adding comment", error);
-    }
-  };
-
-  const handleUpdateComment = async (commentId: string, newText: string) => {
-    try {
-      const response = await axiosInstance.put(`/comments/update/${commentId}`, { text: newText });
-      setComments(comments.map(c => c._id === commentId ? response.data : c));
-    } catch (error) {
-      console.error("Error updating comment", error);
-    }
-  };
-
-  const handleDeleteComment = async (commentId: string) => {
-    try {
-      await axiosInstance.delete(`/comments/delete/${commentId}`);
-      setComments(comments.filter(c => c._id !== commentId));
-    } catch (error) {
-      console.error("Error deleting comment", error);
     }
   };
 
@@ -155,9 +118,14 @@ function EventDetailPage() {
         </div>
       )}
       <hr style={{ margin: "40px 0" }} />
-      <h2 style={{ fontSize: "1.75rem", fontWeight: "bold", marginBottom: "20px" }}>תגובות</h2>
-      <CommentForm onSubmit={handleAddComment} />
-      <CommentList comments={comments} onEdit={handleUpdateComment} onDelete={handleDeleteComment} />
+      <div style={{ marginBottom: "20px" }}>
+        <p style={{ fontSize: "1.75rem", fontWeight: "bold", display: "inline-block", marginRight: "10px" }}>
+          תגובות: {commentCount}
+        </p>
+        <Link to={`/events/${event._id}/comments`} className="btn" style={{ padding: "10px 20px", fontSize: "1rem" }}>
+          צפייה בתגובות
+        </Link>
+      </div>
     </div>
   );
 }
