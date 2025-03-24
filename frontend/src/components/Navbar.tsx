@@ -1,5 +1,5 @@
 // src/components/Navbar.tsx
-import React, { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import "./Navbar.css";
@@ -7,6 +7,11 @@ import "./Navbar.css";
 function Navbar() {
   const { token, clearAuthData } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!token);
+
+  useEffect(() => {
+    setIsLoggedIn(!!token);
+  }, [token]);
 
   const handleLogout = () => {
     clearAuthData();
@@ -17,7 +22,7 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-left">
         <Link to="/" className="navbar-brand">אירועים</Link>
-        {token && (
+        {isLoggedIn && (
           <>
             <Link to="/profile" className="navbar-link">פרופיל</Link>
             <Link to="/notifications" className="navbar-link">התראות</Link>
@@ -25,7 +30,7 @@ function Navbar() {
         )}
       </div>
       <div className="navbar-right">
-        {token ? (
+        {isLoggedIn ? (
           <button onClick={handleLogout}>התנתק</button>
         ) : (
           <>
@@ -38,4 +43,4 @@ function Navbar() {
   );
 }
 
-export default Navbar; 
+export default Navbar;
