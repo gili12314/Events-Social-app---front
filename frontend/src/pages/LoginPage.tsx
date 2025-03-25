@@ -21,21 +21,17 @@ function LoginPage() {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:3000/api/auth/login", { email, password });
-      console.log("Login response:", response.data);
-      if (response.data.token && response.data._id) {
-        setAuthData(response.data.token, response.data._id);
+      if (response.data.token && response.data._id && response.data.refreshToken) {
+        setAuthData(response.data.token, response.data.refreshToken, response.data._id);
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
         localStorage.setItem("userId", response.data._id);
-      } else {
-        console.warn("User information not found in login response");
       }
       navigate("/events");
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        console.error("Login failed:", error.response?.data || error.message);
         alert("התחברות נכשלה. בדוק את הפרטים והנסה שוב.");
       } else {
-        console.error("Unexpected error:", error);
         alert("התחברות נכשלה, שגיאה בלתי צפויה.");
       }
     }
