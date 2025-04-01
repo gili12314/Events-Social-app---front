@@ -13,13 +13,13 @@ interface Event {
   likes: string[];
   createdBy: { _id: string; username: string };
   participants: { _id: string; username: string }[];
+  improvementResponse?: string;
 }
 
 function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [event, setEvent] = useState<Event | null>(null);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
-  const [suggestions, setSuggestions] = useState<string>("");
   const [commentCount, setCommentCount] = useState<number>(0);
   const currentUserId = localStorage.getItem("userId") || "";
 
@@ -48,10 +48,11 @@ function EventDetailPage() {
   }, [id]);
 
   const handleImprove = async () => {
+    if (!event) return;
     try {
       setLoadingSuggestions(true);
       const response = await axiosInstance.post(`/events/${id}/improve`, {});
-      setSuggestions(response.data.suggestions);
+      setEvent({ ...event, improvementResponse: response.data.suggestions });
     } catch (error) {
       console.error("Error getting suggestions", error);
     } finally {
@@ -84,7 +85,7 @@ function EventDetailPage() {
     try {
       await axiosInstance.delete(`/events/${event._id}`);
       alert("האירוע נמחק בהצלחה");
-      window.location.href = "/events"; // Redirect to events page after delete
+      window.location.href = "/events";
     } catch (error) {
       console.error("Error deleting event", error);
       alert("לא ניתן למחוק את האירוע");
@@ -148,12 +149,16 @@ function EventDetailPage() {
         </>
       )}
       <LikeButton eventId={event._id} initialLikes={event.likes} />
-      {loadingSuggestions && <p style={{ marginTop: "20px" }}>טוען הצעות...</p>}
-      {suggestions && (
-        <div style={{ marginTop: "20px", padding: "16px", border: "1px solid #ccc", borderRadius: "8px", backgroundColor: "#fff" }}>
-          <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "12px" }}>הצעות לשיפור האירוע:</h2>
-          <p>{suggestions}</p>
-        </div>
+      {currentUserId === creatorId && (
+        <>
+          {loadingSuggestions && <p style={{ marginTop: "20px" }}>טוען הצעות...</p>}
+          {!loadingSuggestions && (
+            <div style={{ marginTop: "20px", padding: "16px", border: "1px solid #ccc", borderRadius: "8px", backgroundColor: "#fff" }}>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "12px" }}>הצעות לשיפור האירוע:</h2>
+              <p>{event.improvementResponse || "אין הצעות כרגע"}</p>
+            </div>
+          )}
+        </>
       )}
       <hr style={{ margin: "40px 0" }} />
       <div style={{ marginBottom: "20px" }}>

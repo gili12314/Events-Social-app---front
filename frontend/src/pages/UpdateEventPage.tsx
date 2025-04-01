@@ -1,4 +1,3 @@
-// src/pages/UpdateEventPage.tsx
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
@@ -45,8 +44,8 @@ const UpdateEventPage: React.FC = () => {
       let imagePath = eventData?.image || "";
       if (imageFile) {
         const formData = new FormData();
-        formData.append("image", imageFile);
-        const uploadResponse = await axiosInstance.put(`/events/${id}/image`, formData, {
+        formData.append("file", imageFile);
+        const uploadResponse = await axiosInstance.post(`/events/${id}/uploadImage`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         imagePath = uploadResponse.data.eventImage;

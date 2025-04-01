@@ -23,20 +23,20 @@ function ProfilePage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [myEvents, setMyEvents] = useState<Event[]>([]);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
-        const response = await axios.get("http://localhost:3000/api/auth/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setProfile(response.data);
-      } catch (error) {
-        console.error("Failed to fetch profile", error);
-      }
-    };
+  const fetchProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const response = await axios.get("http://localhost:3000/api/auth/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setProfile(response.data);
+    } catch (error) {
+      console.error("Failed to fetch profile", error);
+    }
+  };
 
+  useEffect(() => {
     const fetchMyEvents = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -97,7 +97,7 @@ function ProfilePage() {
           </Link>
         </div>
       </div>
-      <ProfilePictureUpload />
+      <ProfilePictureUpload onUploadSuccess={fetchProfile} />
       <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", marginTop: "40px" }}>האירועים שלי</h2>
       {myEvents.length === 0 ? (
         <p>לא נוצרו אירועים.</p>
@@ -116,4 +116,4 @@ function ProfilePage() {
   );
 }
 
-export default ProfilePage; 
+export default ProfilePage;

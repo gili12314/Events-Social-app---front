@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 
-const ProfilePictureUpload: React.FC = () => {
+interface Props {
+  onUploadSuccess?: () => void;
+}
+
+const ProfilePictureUpload: React.FC<Props> = ({ onUploadSuccess }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string>("");
 
@@ -16,19 +20,14 @@ const ProfilePictureUpload: React.FC = () => {
       setUploadStatus("לא נבחר קובץ");
       return;
     }
-
     const formData = new FormData();
     formData.append("image", selectedFile);
-
     try {
-      const response = await axiosInstance.put("/users/profile-picture", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+       await axiosInstance.put("/users/profile-picture", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
       setUploadStatus("התמונה עודכנה בהצלחה!");
-      console.log("Response:", response.data);
-      // אפשר לעדכן גם state גלובלי או לעדכן את הפרופיל במידת הצורך
+      if (onUploadSuccess) onUploadSuccess();
     } catch (error) {
       console.error("Upload error:", error);
       setUploadStatus("שגיאה בהעלאת התמונה");

@@ -1,4 +1,3 @@
-// src/pages/CreateEventPage.tsx
 import React, { useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
@@ -18,12 +17,11 @@ const CreateEventPage: React.FC = () => {
       if (imageFile) {
         const formData = new FormData();
         formData.append("image", imageFile);
-        const uploadResponse = await axiosInstance.put("/events/image", formData, {
+        const uploadResponse = await axiosInstance.post("/events/upload", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         imagePath = uploadResponse.data.eventImage;
       }
-      // בונה את האובייקט payload באופן תנאי – אם אין תמונה לא נשלח השדה "image"
       const eventPayload: { title: string; description: string; date: string; location: string; image?: string } = {
         title,
         description,
